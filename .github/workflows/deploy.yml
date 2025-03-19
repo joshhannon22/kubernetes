@@ -29,6 +29,7 @@ jobs:
 
     - name: Initialize Terraform
       run: terraform init
+      working-directory: Infra
 
     - name: Plan Terraform
       run: terraform plan -out=tfplan
