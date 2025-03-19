@@ -19,6 +19,6 @@ module "acr" {
   source                      = "./Modules/ContainerRegistry"
   resource_group_name         = var.resource_group_name
   location                    = var.location
-  prefix                      = var.prefix
+  prefix                      = "${var.prefix}joshhannonpriv"
   kubernetes_cluster_identity = module.kubernetes.cluster_identity_id
 }
