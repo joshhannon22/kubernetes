@@ -21,6 +21,9 @@ jobs:
       uses: azure/login@v2
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Set Terraform Subscription ID
+      run: echo "TF_VAR_subscription_id=$(echo '${{ secrets.AZURE_CREDENTIALS }}' | jq -r .subscriptionId)" >> $GITHUB_ENV
 
     - name: Install Terraform
       uses: hashicorp/setup-terraform@v3
