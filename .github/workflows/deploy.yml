@@ -33,3 +33,4 @@ jobs:
 
     - name: Plan Terraform
       run: terraform plan -out=tfplan
+      working-directory: Infra
