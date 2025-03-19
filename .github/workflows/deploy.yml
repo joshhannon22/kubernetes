@@ -35,5 +35,32 @@ jobs:
       working-directory: Infra
 
     - name: Plan Terraform
-      run: terraform plan -out=tfplan -var-file=Vars/kube_deploy.tfvars
+      run: terraform plan -out=tfplan -var-file=Vars/kube_deploy.tfvars | tee plan_output.txt
+      working-directory: Infra
+
+    # Extract Plan
+    - name: Check Terraform Plan for Additions or Destroys
+      id: check_plan
+      run: |
+        ADDS=$(grep "Plan: " Infra/plan_output.txt | awk '{print $2}')
+        CHANGES=$(grep "Plan: " Infra/plan_output.txt | awk '{print $4}')
+        DESTROYS=$(grep "Plan: " Infra/plan_output.txt | awk '{print $6}')
+
+        echo "Adds: $ADDS, Changes: $CHANGES, Destroys: $DESTROYS"
+
+        if [[ "$ADDS" -gt 0 || "$DESTROYS" -gt 0 ]]; then
+          echo "manual_approval=true" >> $GITHUB_ENV
+        else
+          echo "manual_approval=false" >> $GITHUB_ENV
+        fi
+    
+    # If manual approval is required, wait for manual intervention
+    - name: Manual Approval
+      if: env.manual_approval == 'true'
+      uses: hmarr/auto-approve-action@v3
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Apply Terraform
+      run: terraform apply -var-file=Vars/kube_deploy.tfvars
       working-directory: Infra
