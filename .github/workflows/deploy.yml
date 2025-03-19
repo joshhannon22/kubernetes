@@ -32,5 +32,5 @@ jobs:
       working-directory: Infra
 
     - name: Plan Terraform
-      run: terraform plan -out=tfplan -var-file=Infra/Vars/kube_deploy.tfvars
+      run: terraform plan -out=tfplan -var-file=Vars/kube_deploy.tfvars
       working-directory: Infra
