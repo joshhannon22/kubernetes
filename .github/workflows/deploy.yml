@@ -58,9 +58,9 @@ jobs:
     # If manual approval is required, wait for manual intervention
     - name: Manual Approval
       if: env.manual_approval == 'true'
-      uses: hmarr/auto-approve-action@v3
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        echo "Manual approval required before applying changes."
+        exit 1  # This is just to pause the workflow until you manually approve
 
     - name: Apply Terraform
       run: terraform apply -var-file=Vars/kube_deploy.tfvars
