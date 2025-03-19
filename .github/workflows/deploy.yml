@@ -42,9 +42,10 @@ jobs:
     - name: Check Terraform Plan for Additions or Destroys
       id: check_plan
       run: |
-        ADDS=$(grep "Plan: " Infra/plan_output.txt | awk '{print $2}')
-        CHANGES=$(grep "Plan: " Infra/plan_output.txt | awk '{print $4}')
-        DESTROYS=$(grep "Plan: " Infra/plan_output.txt | awk '{print $6}')
+        sed 's/\x1b\[[0-9;]*m//g' Infra/plan_output.txt > Infra/plan_clean_output.txt
+        ADDS=$(grep "Plan: " Infra/plan_clean_output.txt | awk '{print $2}')
+        CHANGES=$(grep "Plan: " Infra/plan_clean_output.txt | awk '{print $4}')
+        DESTROYS=$(grep "Plan: " Infra/plan_clean_output.txt | awk '{print $6}')
 
         echo "Adds: $ADDS, Changes: $CHANGES, Destroys: $DESTROYS"
 
